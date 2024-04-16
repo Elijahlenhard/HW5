@@ -15,7 +15,8 @@ public class NumPaths {
         Node[] graph = new Node[n];
 
         for (int i = 0; i < n; i++) {
-            graph[i] = new Node(i==t);
+            graph[i] = new Node(i+1==t);
+            graph[i].index =i+1;
         }
 
         for (int i = 0; i < m; i++) {
@@ -28,8 +29,10 @@ public class NumPaths {
         Queue queue = new Queue(n);
 
         queue.enqueue(graph[s]);
+        graph[s].visited = true;
 
         int goalFoundAt = -1;
+        int pathsFound =0;
 
         while(!queue.empty()){
 
@@ -42,16 +45,21 @@ public class NumPaths {
                 Node nextNeighbor = current.neighbors[i];
 
                 if(nextNeighbor.isGoal){
-                    goalFoundAt = nextNeighbor.searchDepth;
+                    goalFoundAt = current.searchDepth;
+                    pathsFound++;
+                    continue;
                 }
 
                 if (!nextNeighbor.visited){
                     nextNeighbor.searchDepth = current.searchDepth+1;
                     queue.enqueue(nextNeighbor);
+                    nextNeighbor.visited = true;
                 }
             }
 
         }
+
+        System.out.println(pathsFound);
 
 
     }
@@ -92,6 +100,7 @@ class Queue{
 
 
 class Node {
+    int index;
     Node[] neighbors;
     int neighborCount;
     boolean visited;
