@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class ConnectGraph {
-    /*
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
@@ -38,10 +38,10 @@ public class ConnectGraph {
 
     }
 
-     */
+
 }
 
-/*
+
 class Node {
     Node[] neighbors;
     int neighborCount;
@@ -91,7 +91,7 @@ class Node {
 
 }
 
- */
+
 
 
 

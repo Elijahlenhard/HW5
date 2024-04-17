@@ -4,8 +4,6 @@ public class NumPaths {
 
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
-
-
         int n = sc.nextInt();
         int m = sc.nextInt();
 
@@ -28,8 +26,8 @@ public class NumPaths {
 
         Queue queue = new Queue(n);
 
-        queue.enqueue(graph[s]);
-        graph[s].visited = true;
+        queue.enqueue(graph[s-1]);
+        graph[s-1].visited = true;
 
         int goalFoundAt = -1;
         int pathsFound =0;
@@ -37,7 +35,7 @@ public class NumPaths {
         while(!queue.empty()){
 
             Node current = queue.dequeue();
-            if(current.searchDepth > goalFoundAt && goalFoundAt !=-1){
+            if(current.searchDepth > goalFoundAt-1 && goalFoundAt !=-1){
                 break;
             }
 
@@ -45,7 +43,8 @@ public class NumPaths {
                 Node nextNeighbor = current.neighbors[i];
 
                 if(nextNeighbor.isGoal){
-                    goalFoundAt = current.searchDepth;
+                    goalFoundAt = current.searchDepth+1;
+                    nextNeighbor.searchDepth = goalFoundAt;
                     pathsFound++;
                     continue;
                 }
@@ -59,17 +58,76 @@ public class NumPaths {
 
         }
 
-        System.out.println(pathsFound);
+        Stack stack = new Stack();
+        stack.push(graph[s-1]);
+        int paths =0;
+
+
+        while(!stack.empty()){
+            Node current = stack.pop();
+            if(current.isGoal){
+                paths++;
+            }
+            for (int i = 0; i < current.neighborCount; i++) {
+                int nextSD = current.neighbors[i].searchDepth;
+                if(nextSD<=goalFoundAt && nextSD > current.searchDepth){
+                    stack.push(current.neighbors[i]);
+                }
+            }
+
+
+        }
+
+
+        System.out.println(paths);
 
 
     }
 
 }
+
+class Stack{
+    Node[] arr;
+    int size;
+
+
+    public Stack(){
+        arr = new Node[10];
+    }
+
+    public void push(Node n){
+        if(arr.length == size){
+            increaseCap();
+        }
+        arr[size] = n;
+        size++;
+    }
+    public Node pop(){
+        size--;
+        return arr[size];
+    }
+
+    public boolean empty(){
+        return size==0;
+    }
+
+    private void increaseCap(){
+        Node[] newArr = new Node[arr.length*10];
+        for (int i = 0; i < arr.length; i++) {
+            newArr[i] = arr[i];
+        }
+        arr = newArr;
+    }
+
+
+}
+
 class Queue{
 
     Node[] arr;
     int enqueueIndex=0;
     int dequeueIndex=0;
+
 
     public Queue(int n){
         arr = new Node[n];
@@ -136,6 +194,10 @@ class Node {
         }
     }
 
+    @Override
+    public String toString(){
+        return ""+index;
+    }
 
 
 
@@ -153,3 +215,5 @@ class Node {
 
 
 }
+
+
